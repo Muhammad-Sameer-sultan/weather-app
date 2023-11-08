@@ -1,5 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Eczar&family=Roboto+Slab&display=swap');
 *{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+html{
+  font-size: 85%;
+  color: white;
+  font-family: 'Eczar', serif;
+}
+h1,h2,h3,h4,h4,h6{
+  font-family: 'Roboto Slab', serif;
+  color: white;
+
+  
+}
+h3{
+  color: white;
+  /* background: rgb(248, 249, 250); */
+
+}
+.bg-blue{
+  background: rgb(23,107,171); ;
+  color: white;
 }

@@ -1,5 +1,6 @@
   // NewsProvider.js
   import {useState}from 'react'
+  import PropTypes from 'prop-types';
   import weatherContext from './context';
 
 
@@ -57,9 +58,6 @@
 
   function convertTimestampToDateTime(timestamp) {
     const date = new Date(timestamp * 1000); // Convert seconds to milliseconds
-    const year = date.getFullYear();
-    const month = ('0' + (date.getMonth() + 1)).slice(-2); // Month is zero-based
-    const day = ('0' + date.getDate()).slice(-2);
     const hours = ('0' + date.getHours()).slice(-2);
     const minutes = ('0' + date.getMinutes()).slice(-2);
     const seconds = ('0' + date.getSeconds()).slice(-2);
@@ -70,18 +68,46 @@
 
     return formattedDateTime;
   }
-
-  convertTimestampToDateTime(1661870592)
+  function getCurrentDateTime() {
+    const currentDate = new Date();
+  
+    const year = currentDate.getFullYear();
+    const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+    const day = ('0' + currentDate.getDate()).slice(-2);
+  
+    const hours = ('0' + currentDate.getHours()).slice(-2);
+    const minutes = ('0' + currentDate.getMinutes()).slice(-2);
+    const seconds = ('0' + currentDate.getSeconds()).slice(-2);
+  
+    const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  
+    return formattedDateTime;
+  }
+  
+  function timestampToTime(timestamp) {
+    const date = new Date(timestamp * 1000); // Convert seconds to milliseconds
+  
+    const hours = date.getHours();
+    const minutes = "0" + date.getMinutes();
+    const seconds = "0" + date.getSeconds();
+  
+    const formattedTime = `${hours}:${minutes.substr(-2)}:${seconds.substr(-2)}`;
+  
+    return formattedTime;
+  }
+  
 
 
 
 
 
     return (
-      <weatherContext.Provider value={{location,apiKey, setlocation,iconUrl,calculateDewPoint,convertTimestampToDateTime,weatherUpdateTime,weatherdata, setweatherdata}}>
+      <weatherContext.Provider value={{timestampToTime,getCurrentDateTime,location,apiKey, setlocation,iconUrl,calculateDewPoint,convertTimestampToDateTime,weatherUpdateTime,weatherdata, setweatherdata}}>
           {children}
       </weatherContext.Provider>
     )
   }
-
+  WeatherProvider.propTypes = {
+    children: PropTypes.node.isRequired,
+  };
   export default WeatherProvider
