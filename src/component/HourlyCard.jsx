@@ -3,6 +3,8 @@ import { useContext } from "react";
 import PropTypes from 'prop-types';
 import Card from "react-bootstrap/Card";
 import weatherContext from "../context/context";
+import {WiWindDeg } from "react-icons/wi";
+
 
 const HourlyCard = ({ hourlyweather }) => {
   const { iconUrl} = useContext(weatherContext);
@@ -26,23 +28,30 @@ const HourlyCard = ({ hourlyweather }) => {
               {hourlyweather.main.temp} <sup>o</sup>C
             </h3>
           </div>
-          <div className=" d-flex justify-content-center align-items-center gap-3 mt-3 row">
+          <div className=" d-flex justify-content-center align-items-center gap-3  row">
             <div className="col-4">
-              <div className="position-relative rounded-circle p-4 bg-black text-center ">
+              <div className="p-2">
                 {hourlyweather.wind.deg && (
-                  <div
-                    className="fs-1 rounded-circle w-100  position-absolute col-2"
-                    style={{
+                  <WiWindDeg className="fs-1 "
+                  style={{
+                    transform: `rotate(${hourlyweather.wind.deg}deg) `,
+                    fontSize:"4rem",
+                    height: "4rem",
+                    width: "4rem"
+                  }}/>
+                  // <div
+                    // className="fs-1 rounded-circle w-100  position-absolute col-2"
+                    // style={{
 
-                      transform: `rotate(${hourlyweather.wind.deg}deg) `,
-                      top: "-0.5rem",
-                      left: "-0.5rem",
-                      // transform: "translate(-50%, -50%)",
-                      transformOrigin: "center center",
-                    }}
-                  >
-                    <i className=" fas fa-arrow-down  text-light fs-6"></i>
-                  </div>
+                    //   transform: `rotate(${hourlyweather.wind.deg}deg) `,
+                    //   top: "-0.5rem",
+                    //   left: "-0.5rem",
+                    //   // transform: "translate(-50%, -50%)",
+                    //   transformOrigin: "center center",
+                    // }}
+                  // >
+                  //   <i className=" fas fa-arrow-down  text-light fs-6"></i>
+                  // </div>
                 )}
               </div>
             </div>
