@@ -10,7 +10,7 @@
     const [weatherdata, setweatherdata] = useState(null);
 
     const apiKey = import.meta.env.VITE_API_KEY;
-  const iconUrl='https://openweathermap.org/img/wn/'
+  const iconUrl='https://openweathermap.org/img/w/'
 
   // fuctions
   // to calcualte calculateDewPoint

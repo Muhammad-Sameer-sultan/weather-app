@@ -8,7 +8,6 @@ import {WiWindDeg } from "react-icons/wi";
 
 const HourlyCard = ({ hourlyweather }) => {
   const { iconUrl} = useContext(weatherContext);
-  console.log(hourlyweather);
   return (
     <div className="col-lg-3 p-3" >
       <Card className="" style={{ width: "16rem" }}>

@@ -3,7 +3,7 @@ import axios from "axios";
 import weatherContext from "../context/context";
 import { Container } from "react-bootstrap";
 import thunder from "../assets/bg.jpg";
-import bgNight from "../assets//night.webp"
+import bgNight from "../assets//night.webp";
 import HourlyCard from "./HourlyCard";
 import {
   WiHumidity,
@@ -14,10 +14,12 @@ import {
 } from "react-icons/wi";
 import { MdDewPoint, MdOutlineMyLocation } from "react-icons/md";
 import { AiFillEyeInvisible } from "react-icons/ai";
+import ModalError from "./ModalError";
 
 const Weather = () => {
   const [hourlyweather, sethourlyweather] = useState(null);
-
+  const [show, setShow] = useState(false);
+  const [cityError, setcityError] = useState(false);
   const {
     apiKey,
     getCurrentDateTime,
@@ -40,10 +42,12 @@ const Weather = () => {
         `https://api.openweathermap.org/data/2.5/forecast?units=metric&appid=${apiKey}&q=${location}`
       );
       sethourlyweather(response1.data);
-     
+
       console.log(response1.data);
     } catch (error) {
       console.error("Error:", error);
+      setShow(true);
+      setcityError(error)
     }
   };
 
@@ -58,14 +62,14 @@ const Weather = () => {
           `https://api.openweathermap.org/data/2.5/forecast?units=metric&appid=${apiKey}&lat=24.91&lon=67.08`
         );
         sethourlyweather(response1.data);
-        console.log(response1.data);
-        if(weatherdata.weather[0].icon.slice(-1)!=="d"){
-          document.body.style.backgroundImage = `url(${bgNight}) center/cover no-repeat fixed`;
-      
-        }else{
-          document.body.style.backgroundImage = `url(${thunder}) center/cover no-repeat fixed`;
-      
-        }
+        // console.log(response1.data);
+        // if(weatherdata.weather[0].icon.slice(-1)!=="d"){
+        //   document.body.style.backgroundImage = `url(${bgNight}) center/cover no-repeat fixed`;
+
+        // }else{
+        //   document.body.style.backgroundImage = `url(${thunder}) center/cover no-repeat fixed`;
+
+        // }
         // const position = await new Promise((resolve, reject) => {
         //   navigator.geolocation.getCurrentPosition(resolve, reject);
         // });
@@ -92,18 +96,16 @@ const Weather = () => {
     } else {
       fetchweatherByLocation(location);
     }
-    if(weatherdata.weather[0].icon.slice(-1)!=="d"){
-      document.body.style.backgroundImage = `url(${bgNight}) `;
-      console.log("night");
-      
-    }else{
-      document.body.style.backgroundImage = `url(${thunder}) `;
-      console.log("day");
-  
-    }
   }, [location]);
- 
 
+  const updateBackground = () => {
+    if (weatherdata && weatherdata.weather[0].icon.slice(-1) !== "d") {
+      document.body.style.background = `url(${bgNight}) center/cover no-repeat fixed`;
+    } else {
+      document.body.style.background = `url(${thunder}) center/cover no-repeat fixed`;
+    }
+  };
+  updateBackground();
   console.log(weatherdata);
   return (
     <div>
@@ -143,11 +145,11 @@ const Weather = () => {
                   />
                 </div>
 
-                <div className="text-center text-light d-flex flex-wrap align-items-center justify-content-center ">
+                <div className="text-center text-light d-flex flex-wrap align-items-center justify-content-center gap-5">
                   <div className="">
                     <div className="ms-3 d-sm-flex text-start  align-items-center  justify-content-center ">
                       <div className="text-start">
-                        <h3>{weatherdata.name}</h3>
+                        <h3>{weatherdata.weather[0].main}</h3>
                         <h1 className="">
                           {weatherdata.main.temp} <sup>o</sup>C
                         </h1>
@@ -156,19 +158,25 @@ const Weather = () => {
                       </div>
                     </div>
                   </div>
-                  <div>
-                  <h3 className="p-2">
-                        {weatherdata.weather[0].main}
-                      </h3>
-                    <div className="ms-5 d-flex justify-content-center align-items-center gap-3 ">
-                    
+                  <div className="text-start">
+                    <img
+                      src={`https://flagcdn.com/40x30/${weatherdata.sys.country.toLowerCase()}.png`}
+                      alt={""}
+                      className=""
+                    />
+                    <h2 className="  text-start">{weatherdata.name}</h2>
+                    <div className=" d-flex justify-content-center align-items-center gap-3 ">
+                    <div>
+                        <h4 className="text-start">Wind </h4>
+                        <h4>
+                          {(weatherdata.wind.speed * 3.6).toFixed(2)} Km/hr
+                        </h4>
+                      </div>
                       <div>
-                        
-                        <div className="position-relative rounded-circle p-4 bg-black text-center">
-                          
+                        <div className="position-relative rounded-circle p-3 bg-black text-center">
                           {weatherdata.wind.deg && (
                             <div
-                              className="fs-2 "
+                              className="fs-0 "
                               style={{
                                 transform: `rotate(${weatherdata.wind.deg}deg)`,
                                 top: "50%",
@@ -181,12 +189,7 @@ const Weather = () => {
                           )}
                         </div>
                       </div>
-                      <div>
-                        <h4>Wind </h4>
-                        <h4>
-                          {(weatherdata.wind.speed * 3.6).toFixed(2)} Km/hr
-                        </h4>
-                      </div>
+                      
                     </div>
                   </div>
                 </div>
@@ -283,6 +286,7 @@ const Weather = () => {
           </Container>
         </div>
       )}
+      <ModalError show={show}  setShow={ setShow} cityError={cityError.response.data}/>
     </div>
   );
 };
