@@ -9,6 +9,9 @@ html{
   color: white;
   font-family: 'Eczar', serif;
 }
+body{
+  background-color: rgb(23,107,171);
+}
 
 h1,h2,h3,h4,h4,h6{
   font-family: 'Roboto Slab', serif;
@@ -24,4 +27,8 @@ h3{
 .bg-blue{
   background: rgb(23,107,171); ;
   color: white;
+}
+.bg-nav{
+  background: rgba(248, 249, 250, 0.2);
+
 }

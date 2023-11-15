@@ -15,9 +15,15 @@ import {
 import { MdDewPoint, MdOutlineMyLocation } from "react-icons/md";
 import { AiFillEyeInvisible } from "react-icons/ai";
 import ModalError from "./ModalError";
+import ClockLoader from "react-spinners/ClockLoader";
+
+const override= {
+  display: "block",
+  margin: "2rem auto",
+  border:"2px solid white"
+};
 
 const Weather = () => {
-  const [hourlyweather, sethourlyweather] = useState(null);
   const [show, setShow] = useState(false);
   const [cityError, setcityError] = useState(false);
   const {
@@ -29,7 +35,7 @@ const Weather = () => {
     convertTimestampToDateTime,
     weatherUpdateTime,
     weatherdata,
-    setweatherdata,
+    setweatherdata,hourlyweather, sethourlyweather
   } = useContext(weatherContext);
 
   const fetchweatherByLocation = async (location) => {
@@ -62,25 +68,18 @@ const Weather = () => {
           `https://api.openweathermap.org/data/2.5/forecast?units=metric&appid=${apiKey}&lat=24.91&lon=67.08`
         );
         sethourlyweather(response1.data);
-        // console.log(response1.data);
-        // if(weatherdata.weather[0].icon.slice(-1)!=="d"){
-        //   document.body.style.backgroundImage = `url(${bgNight}) center/cover no-repeat fixed`;
+        console.log(response1.data);
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
 
-        // }else{
-        //   document.body.style.backgroundImage = `url(${thunder}) center/cover no-repeat fixed`;
+        const { latitude, longitude } = position.coords;
+        console.log(latitude, longitude);
 
-        // }
-        // const position = await new Promise((resolve, reject) => {
-        //   navigator.geolocation.getCurrentPosition(resolve, reject);
-        // });
-
-        // const { latitude, longitude } = position.coords;
-        // console.log(latitude, longitude);
-
-        // const response2 = await axios.get(
-        //   `https://api.openweathermap.org/data/2.5/weather?appid=${apiKey}&units=metric&lat=${latitude}&lon=${longitude}`
-        // );
-        // setweatherdata(response2.data);
+        const response2 = await axios.get(
+          `https://api.openweathermap.org/data/2.5/weather?appid=${apiKey}&units=metric&lat=${latitude}&lon=${longitude}`
+        );
+        setweatherdata(response2.data);
 
         // console.log(response.data);
       } catch (error) {
@@ -123,7 +122,7 @@ const Weather = () => {
         >
           <Container>
             <div className="mian row justify-content-center align-items-center ">
-              <div className="current d-flex flex-wrap justify-content-center align-items-center gap-2 mt-4">
+              <div className="current d-flex flex-wrap justify-content-center align-items-center gap-2 mt-3">
                 <div style={{ width: "100px", position: "relative" }}>
                   <div
                     className=""
@@ -145,7 +144,7 @@ const Weather = () => {
                   />
                 </div>
 
-                <div className="text-center text-light d-flex flex-wrap align-items-center justify-content-center gap-5">
+                <div className="text-center mt-3 text-light d-flex flex-wrap align-items-center justify-content-center gap-5">
                   <div className="">
                     <div className="ms-3 d-sm-flex text-start  align-items-center  justify-content-center ">
                       <div className="text-start">
@@ -194,10 +193,10 @@ const Weather = () => {
                   </div>
                 </div>
               </div>
-
-              <div className="col-sm-8 list-group">
-                <div className="row bg-light p-3 rounded-2 mt-3">
-                  <ul className="list-group  col-6">
+<div className="col-sm-8 px-5 p-sm-0">
+<div className="list-group  p-sm-2">
+                <div className="row bg-light p-sm-3 rounded-2 mt-3">
+                  <ul className="list-group  col-sm-6">
                     <li className="list-group-item d-flex justify-content-between align-items-center">
                       <span>
                         <WiHumidity className="fs-2 me-1" /> Humidity
@@ -237,7 +236,7 @@ const Weather = () => {
                       </span>
                     </li>
                   </ul>
-                  <ul className="list-group  col-6">
+                  <ul className="list-group  col-sm-6">
                     <li className="list-group-item d-flex justify-content-between align-items-center">
                       <span>
                         <WiStrongWind className="fs-2 me-1" /> Pressure
@@ -272,8 +271,10 @@ const Weather = () => {
                   </ul>
                 </div>
               </div>
+</div>
+             
             </div>
-            <div className="row mt-4">
+            <div className="row ">
               {/* <HourlyCard key={hourlyweather.dt} hourlyweather={hourlyweather.list}/> */}
               {/* {console.log(hourlyweather.list[0])} */}
               {hourlyweather &&
@@ -286,7 +287,20 @@ const Weather = () => {
           </Container>
         </div>
       )}
+      {cityError &&
       <ModalError show={show}  setShow={ setShow} cityError={cityError.response.data}/>
+      }
+      {!weatherdata&&
+           <ClockLoader
+             color={"#ffffff"}
+             loading={true}
+             cssOverride={override} 
+             size={150}
+             aria-label="Loading Spinner"
+             data-testid="loader"
+           />
+       
+      }
     </div>
   );
 };

@@ -9,27 +9,27 @@ import {WiWindDeg } from "react-icons/wi";
 const HourlyCard = ({ hourlyweather }) => {
   const { iconUrl} = useContext(weatherContext);
   return (
-    <div className="col-lg-3 p-3" >
-      <Card className="" style={{ width: "16rem" }}>
-        <h6 className="bg-blue border border-3 text-center p-2 fs-4" 
+    <div className="col-lg-3  col-sm-6 p-5 py-sm-2 " >
+      <Card className="w-100 " >
+        <h6 className="bg-blue border border-3 text-center p-2 fs-4 m-0" 
         >{hourlyweather.dt_txt.slice(10,16)}</h6>
         <Card.Body>
-          <h4 className="text-center">{hourlyweather.weather[0].description}</h4>
+          <h4 className="text-center m-0">{hourlyweather.weather[0].description}</h4>
           <div className="row justify-content-center align-items-center">
-            <div className="col-4">
+            <div className="col-3 col-lg-4">
               <Card.Img
                 variant=""
                 className="img-fluid rounded-circle border border-1 bg-blue"
                 src={iconUrl + hourlyweather.weather[0].icon + ".png"}
               />
             </div>
-            <h3 className="col-7 text-start">
+            <h3 className="col-7 text- m-0">
               {hourlyweather.main.temp} <sup>o</sup>C
             </h3>
           </div>
           <div className=" d-flex justify-content-center align-items-center gap-3  row">
             <div className="col-4">
-              <div className="p-2">
+              <div className="p-2 text-end">
                 {hourlyweather.wind.deg && (
                   <WiWindDeg className="fs-1 "
                   style={{

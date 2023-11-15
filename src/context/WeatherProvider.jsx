@@ -5,7 +5,7 @@
 
 
   const WeatherProvider = ({children}) => {
-
+    const [hourlyweather, sethourlyweather] = useState(null);
     const [location, setlocation] = useState(null);
     const [weatherdata, setweatherdata] = useState(null);
 
@@ -102,7 +102,7 @@
 
 
     return (
-      <weatherContext.Provider value={{timestampToTime,getCurrentDateTime,location,apiKey, setlocation,iconUrl,calculateDewPoint,convertTimestampToDateTime,weatherUpdateTime,weatherdata, setweatherdata}}>
+      <weatherContext.Provider value={{hourlyweather, sethourlyweather,timestampToTime,getCurrentDateTime,location,apiKey, setlocation,iconUrl,calculateDewPoint,convertTimestampToDateTime,weatherUpdateTime,weatherdata, setweatherdata}}>
           {children}
       </weatherContext.Provider>
     )
