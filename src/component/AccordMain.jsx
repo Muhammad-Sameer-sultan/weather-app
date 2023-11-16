@@ -1,109 +1,241 @@
 import Accordion from "react-bootstrap/Accordion";
 import icon from "../assets/favicon.webp";
-import { MdDewPoint, MdOutlineMyLocation } from "react-icons/md";
-import { useContext } from "react";
+import { MdDewPoint, MdOutlineCompress } from "react-icons/md";
+import {
+  WiHumidity,
+  WiSunrise,
+  WiSunset,
+  WiWindy,
+  WiWindDeg,
+} from "react-icons/wi";
+import { FaTemperatureHigh, FaTemperatureEmpty } from "react-icons/fa6";
+import { AiFillEyeInvisible } from "react-icons/ai";
+import { useContext, useEffect} from "react";
 import weatherContext from "../context/context";
+import axios from 'axios'
 
 function AccordMain() {
-  const {hourlyweather, sethourlyweather}=useContext(weatherContext)
+  const { location,updateBackground,fetchweatherByLocation,hourlyweather,iconUrl, timestampToTime,apiKey ,setweatherdata,sethourlyweather} =
+    useContext(weatherContext);
   console.log(hourlyweather);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `https://api.openweathermap.org/data/2.5/weather?appid=${apiKey}&units=metric&lat=24.91&lon=67.08`
+        );
+        setweatherdata(response.data);
+        const response1 = await axios.get(
+          `https://api.openweathermap.org/data/2.5/forecast?units=metric&appid=${apiKey}&lat=24.91&lon=67.08`
+        );
+        sethourlyweather(response1.data);
+        console.log(response1.data);
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+  
+        const { latitude, longitude } = position.coords;
+        console.log(latitude, longitude);
+  
+        const response2 = await axios.get(
+          `https://api.openweathermap.org/data/2.5/weather?appid=${apiKey}&units=metric&lat=${latitude}&lon=${longitude}`
+        );
+        setweatherdata(response2.data);
+  
+        // console.log(response.data);
+      } catch (error) {
+        console.error("Error:", error);
+       
+      }
+    };
+  
+    if (!location) {
+      fetchData();
+    } else {
+      fetchweatherByLocation(location);
+    }
+  }, [location]);
+
+  function timestampToDateTime(timestamp) {
+    const daysOfWeek = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ];
+  
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+  
+    const currentDate = new Date(timestamp * 1000); // Convert seconds to milliseconds
+    const dayOfWeek = daysOfWeek[currentDate.getDay()];
+    const month = months[currentDate.getMonth()]
+    const day = ('0' + currentDate.getDate()).slice(-2);
+  
+ 
+  
+    const formattedDateTime = `${dayOfWeek}, ${day} ${month} `;
+    return formattedDateTime;
+  }
+  let lastDate=null;
+  const setLastDate=(date)=>{
+    lastDate=date
+  }
+  updateBackground();
+
   return (
     <Accordion className="col-lg-8 bg-light p-4 rounded-2" defaultActiveKey="0">
-        <h4>Thursday, 16 November</h4>
-        {hourlyweather && 
-        hourlyweather.list.map((data)=>(
-          <Accordion.Item key={data.dt} eventKey={data.dt}>
-          <Accordion.Header>
-              <div className="row w-100 d-flex justify-content-between align-items-center">
-                  <div className="col-1 fs-5"><span>15:00</span></div>
-                  <div className="col-2"><h4 className="m-0">25 <sup>o</sup>C</h4></div>
-                  <div className="col-3 justify-content-between align-items-center"><img width={"40px"} src={icon} alt="weather icon" /> <span className="fw-bold ms-2">Party cloudy</span></div>
-                  <div className="col-1"></div>
-                  <div className="col-1 fs-5">1%</div>
-                  <div className="col-3 fs-5"><MdDewPoint/> <span className="ms-1 me-2">13 Km/hr</span> <MdDewPoint/></div>
-              </div>
-          </Accordion.Header>
-          <Accordion.Body>
-            <div className="container">
-              <div className="card p-3">
-                <div className="row">
-                  <div className="col-4">
-                    <div className="d-flex justify-content-center align-items-center">
-                      <div className="d-flex justify-content-between align-items-center">
-                      <MdDewPoint className="fs-3 me-2" />
-                      <div className="">
-                        <span>Humidity</span>
-                        <h5 className="fw-bolder">44%</h5>
+      {hourlyweather &&
+        hourlyweather.list.map((data) => (
+          <div key={data.dt}>
+            {timestampToDateTime(lastDate) !== timestampToDateTime(data.dt) && (
+              <>
+                <h4>{timestampToDateTime(data.dt)}</h4>
+                {setLastDate(data.dt)}
+                
+              </>
+            )}
+            <Accordion.Item eventKey={data.dt}>
+              <Accordion.Header>
+                <div className="row w-100 d-flex justify-content-between align-items-center">
+                  <div className="col-2 col-sm-1 fs-5">
+                    <span>{data.dt_txt.slice(10, 16)}</span>
+                  </div>
+                  <div className="col-2">
+                    <h4 className="m-0 p-0 ">
+                      {data.main.temp} <sup>o</sup>C
+                    </h4>
+                  </div>
+                  <div className="col-3 p-0 justify-content-between align-items-center">
+                    <img
+                      width={"40px"}
+                      src={iconUrl + data.weather[0].icon + ".png"}
+                      alt="weather icon"
+                    />{" "}
+                    <span className="fw-bold ms-2">
+                      {data.weather[0].description.toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="d-none d-sm-block col-sm-1 fs-4">
+                    <WiHumidity />
+                    {data.main.humidity}
+                  </div>
+                  <div className="col-4 fs-4">
+                    <WiWindy className="fs-2" />{" "}
+                    <span className="ms-1 me-2">{data.wind.speed} Km/hr</span>{" "}
+                    <WiWindDeg
+                      className="fs-2"
+                      style={{ transform: `rotate(${data.wind.deg}deg)` }}
+                    />
+                  </div>
+                </div>
+              </Accordion.Header>
+              <Accordion.Body>
+                <div className="container">
+                  <div className="card p-3">
+                    <div className="row">
+                      <div className="col-4">
+                        <div className="d-flex justify-content-center align-items-center">
+                          <div className="d-flex justify-content-between align-items-center">
+                            <FaTemperatureHigh className="fs-3 me-2" />
+                            <div className="">
+                              <span>Maximum Temperature</span>
+                              <h5 className="fw-bolder">
+                                {data.main.temp_max} <sup>o</sup>C
+                              </h5>
+                            </div>
+                          </div>
+                        </div>
                       </div>
+                      <div className="col-4">
+                        <div className="d-flex justify-content-center align-items-center">
+                          <div className="d-flex justify-content-between align-items-center">
+                            <MdOutlineCompress className="fs-3 me-2" />
+                            <div className="">
+                              <span>Pressure</span>
+                              <h5 className="fw-bolder">
+                                {data.main.pressure}
+                              </h5>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-4">
+                        <div className="d-flex justify-content-center align-items-center">
+                          <div className="d-flex justify-content-between align-items-center">
+                            <WiSunrise className="fs-3 me-2" />
+                            <div className="">
+                              <span>Sunrise</span>
+                              <h5 className="fw-bolder">
+                                {timestampToTime(hourlyweather.city.sunrise)}
+                              </h5>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="col-4">
-                    <div className="d-flex justify-content-center align-items-center">
-                      <div className="d-flex justify-content-between align-items-center">
-                      <MdDewPoint className="fs-3 me-2" />
-                      <div className="">
-                        <span>Humidity</span>
-                        <h5 className="fw-bolder">44%</h5>
+                    <hr />
+                    <div className="row">
+                      <div className="col-4">
+                        <div className="d-flex justify-content-center align-items-center">
+                          <div className="d-flex justify-content-between align-items-center">
+                            <FaTemperatureEmpty className="fs-3 me-2" />
+                            <div className="">
+                              <span>Minimun Temperature</span>
+                              <h5 className="fw-bolder">
+                                {data.main.temp_min} <sup>o</sup>C
+                              </h5>
+                            </div>
+                          </div>
+                        </div>
                       </div>
+                      <div className="col-4">
+                        <div className="d-flex justify-content-center align-items-center">
+                          <div className="d-flex justify-content-between align-items-center">
+                            <AiFillEyeInvisible className="fs-3 me-2" />
+                            <div className="">
+                              <span>Visibility</span>
+                              <h5 className="fw-bolder">{data.visibility}</h5>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <div className="col-4">
-                    <div className="d-flex justify-content-center align-items-center">
-                      <div className="d-flex justify-content-between align-items-center">
-                      <MdDewPoint className="fs-3 me-2" />
-                      <div className="">
-                        <span>Humidity</span>
-                        <h5 className="fw-bolder">44%</h5>
-                      </div>
+                      <div className="col-4">
+                        <div className="d-flex justify-content-center align-items-center">
+                          <div className="d-flex justify-content-between align-items-center">
+                            <WiSunset className="fs-3 me-2" />
+                            <div className="">
+                              <span>Sunset</span>
+                              <h5 className="fw-bolder">
+                                {timestampToTime(hourlyweather.city.sunset)}
+                              </h5>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <hr />
-                <div className="row">
-                  <div className="col-4">
-                    <div className="d-flex justify-content-center align-items-center">
-                      <div className="d-flex justify-content-between align-items-center">
-                      <MdDewPoint className="fs-3 me-2" />
-                      <div className="">
-                        <span>Humidity</span>
-                        <h5 className="fw-bolder">44%</h5>
-                      </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-4">
-                    <div className="d-flex justify-content-center align-items-center">
-                      <div className="d-flex justify-content-between align-items-center">
-                      <MdDewPoint className="fs-3 me-2" />
-                      <div className="">
-                        <span>Humidity</span>
-                        <h5 className="fw-bolder">44%</h5>
-                      </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-4">
-                    <div className="d-flex justify-content-center align-items-center">
-                      <div className="d-flex justify-content-between align-items-center">
-                      <MdDewPoint className="fs-3 me-2" />
-                      <div className="">
-                        <span>Humidity</span>
-                        <h5 className="fw-bolder">44%</h5>
-                      </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Accordion.Body>
-        </Accordion.Item>
+              </Accordion.Body>
+            </Accordion.Item>
+          </div>
         ))}
-      
-     
     </Accordion>
   );
 }

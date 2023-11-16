@@ -5,8 +5,6 @@ import Modal from 'react-bootstrap/Modal';
 function ModalError({show,setShow,cityError}) {
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-console.log(cityError);
   return (
     <>
    

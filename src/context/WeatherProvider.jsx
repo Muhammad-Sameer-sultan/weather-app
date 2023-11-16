@@ -2,12 +2,20 @@
   import {useState}from 'react'
   import PropTypes from 'prop-types';
   import weatherContext from './context';
+  import axios from "axios";
+  import thunder from "../assets/bg.jpg";
+import bgNight from "../assets/night.webp";
+
 
 
   const WeatherProvider = ({children}) => {
     const [hourlyweather, sethourlyweather] = useState(null);
     const [location, setlocation] = useState(null);
     const [weatherdata, setweatherdata] = useState(null);
+    const [cityError, setcityError] = useState(false);
+    const [show, setShow] = useState(false);
+
+
 
     const apiKey = import.meta.env.VITE_API_KEY;
   const iconUrl='https://openweathermap.org/img/w/'
@@ -95,14 +103,38 @@
   
     return formattedTime;
   }
-  
+  const fetchweatherByLocation = async (location) => {
+    try {
+      const response = await axios.get(
+        `https://api.openweathermap.org/data/2.5/weather?appid=${apiKey}&units=metric&q=${location}`
+      );
+      setweatherdata(response.data);
+      const response1 = await axios.get(
+        `https://api.openweathermap.org/data/2.5/forecast?units=metric&appid=${apiKey}&q=${location}`
+      );
+      sethourlyweather(response1.data);
+
+      console.log(response1.data);
+    } catch (error) {
+      console.error("Error:", error);
+      setShow(true);
+      setcityError(error)
+    }
+  };
+  const updateBackground = () => {
+    if (weatherdata && weatherdata.weather[0].icon.slice(-1) !== "d") {
+      document.body.style.background = `url(${bgNight}) center/cover no-repeat fixed`;
+    } else {
+      document.body.style.background = `url(${thunder}) center/cover no-repeat fixed`;
+    }
+  };
 
 
 
 
 
     return (
-      <weatherContext.Provider value={{hourlyweather, sethourlyweather,timestampToTime,getCurrentDateTime,location,apiKey, setlocation,iconUrl,calculateDewPoint,convertTimestampToDateTime,weatherUpdateTime,weatherdata, setweatherdata}}>
+      <weatherContext.Provider value={{updateBackground,show, setShow,fetchweatherByLocation,cityError, setcityError,hourlyweather, sethourlyweather,timestampToTime,getCurrentDateTime,location,apiKey, setlocation,iconUrl,calculateDewPoint,convertTimestampToDateTime,weatherUpdateTime,weatherdata, setweatherdata}}>
           {children}
       </weatherContext.Provider>
     )

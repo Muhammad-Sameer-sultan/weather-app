@@ -24,9 +24,11 @@ const override= {
 };
 
 const Weather = () => {
-  const [show, setShow] = useState(false);
-  const [cityError, setcityError] = useState(false);
   const {
+    updateBackground,
+    show, setShow,
+    fetchweatherByLocation,
+    cityError, 
     apiKey,
     getCurrentDateTime,
     location,
@@ -38,24 +40,7 @@ const Weather = () => {
     setweatherdata,hourlyweather, sethourlyweather
   } = useContext(weatherContext);
 
-  const fetchweatherByLocation = async (location) => {
-    try {
-      const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?appid=${apiKey}&units=metric&q=${location}`
-      );
-      setweatherdata(response.data);
-      const response1 = await axios.get(
-        `https://api.openweathermap.org/data/2.5/forecast?units=metric&appid=${apiKey}&q=${location}`
-      );
-      sethourlyweather(response1.data);
 
-      console.log(response1.data);
-    } catch (error) {
-      console.error("Error:", error);
-      setShow(true);
-      setcityError(error)
-    }
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -97,13 +82,6 @@ const Weather = () => {
     }
   }, [location]);
 
-  const updateBackground = () => {
-    if (weatherdata && weatherdata.weather[0].icon.slice(-1) !== "d") {
-      document.body.style.background = `url(${bgNight}) center/cover no-repeat fixed`;
-    } else {
-      document.body.style.background = `url(${thunder}) center/cover no-repeat fixed`;
-    }
-  };
   updateBackground();
   console.log(weatherdata);
   return (
