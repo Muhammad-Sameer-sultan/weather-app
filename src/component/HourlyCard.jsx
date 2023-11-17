@@ -14,7 +14,7 @@ const HourlyCard = ({ hourlyweather }) => {
         <h6 className="bg-blue border border-3 text-center p-2 fs-4 m-0" 
         >{hourlyweather.dt_txt.slice(10,16)}</h6>
         <Card.Body>
-          <h4 className="text-center m-0">{hourlyweather.weather[0].description}</h4>
+          <h4 className="text-center m-0">{hourlyweather.weather[0].description.toUpperCase()}</h4>
           <div className="row justify-content-center align-items-center">
             <div className="col-3 col-lg-4">
               <Card.Img

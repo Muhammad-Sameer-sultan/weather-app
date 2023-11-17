@@ -114,7 +114,6 @@ import bgNight from "../assets/night.webp";
       );
       sethourlyweather(response1.data);
 
-      console.log(response1.data);
     } catch (error) {
       console.error("Error:", error);
       setShow(true);

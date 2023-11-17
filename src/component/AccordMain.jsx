@@ -1,6 +1,5 @@
 import Accordion from "react-bootstrap/Accordion";
-import icon from "../assets/favicon.webp";
-import { MdDewPoint, MdOutlineCompress } from "react-icons/md";
+import {  MdOutlineCompress } from "react-icons/md";
 import {
   WiHumidity,
   WiSunrise,
@@ -17,7 +16,6 @@ import axios from 'axios'
 function AccordMain() {
   const { location,updateBackground,fetchweatherByLocation,hourlyweather,iconUrl, timestampToTime,apiKey ,setweatherdata,sethourlyweather} =
     useContext(weatherContext);
-  console.log(hourlyweather);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,20 +28,17 @@ function AccordMain() {
           `https://api.openweathermap.org/data/2.5/forecast?units=metric&appid=${apiKey}&lat=24.91&lon=67.08`
         );
         sethourlyweather(response1.data);
-        console.log(response1.data);
         const position = await new Promise((resolve, reject) => {
           navigator.geolocation.getCurrentPosition(resolve, reject);
         });
   
         const { latitude, longitude } = position.coords;
-        console.log(latitude, longitude);
   
         const response2 = await axios.get(
           `https://api.openweathermap.org/data/2.5/weather?appid=${apiKey}&units=metric&lat=${latitude}&lon=${longitude}`
         );
         setweatherdata(response2.data);
   
-        // console.log(response.data);
       } catch (error) {
         console.error("Error:", error);
        
@@ -55,6 +50,7 @@ function AccordMain() {
     } else {
       fetchweatherByLocation(location);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   function timestampToDateTime(timestamp) {
@@ -101,6 +97,11 @@ function AccordMain() {
 
   return (
     <Accordion className="col-lg-8 bg-light p-4 rounded-2" defaultActiveKey="0">
+      {hourlyweather && <h3>{hourlyweather.city.name}  <img
+                      src={`https://flagcdn.com/40x30/${hourlyweather.city.country.toLowerCase()}.png`}
+                      alt={""}
+                      className="ms-2"
+                    /></h3>}
       {hourlyweather &&
         hourlyweather.list.map((data) => (
           <div key={data.dt}>

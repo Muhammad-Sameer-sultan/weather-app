@@ -1,9 +1,8 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect,  useContext } from "react";
 import axios from "axios";
 import weatherContext from "../context/context";
 import { Container } from "react-bootstrap";
-import thunder from "../assets/bg.jpg";
-import bgNight from "../assets//night.webp";
+
 import HourlyCard from "./HourlyCard";
 import {
   WiHumidity,
@@ -53,25 +52,20 @@ const Weather = () => {
           `https://api.openweathermap.org/data/2.5/forecast?units=metric&appid=${apiKey}&lat=24.91&lon=67.08`
         );
         sethourlyweather(response1.data);
-        console.log(response1.data);
         const position = await new Promise((resolve, reject) => {
           navigator.geolocation.getCurrentPosition(resolve, reject);
         });
 
         const { latitude, longitude } = position.coords;
-        console.log(latitude, longitude);
 
         const response2 = await axios.get(
           `https://api.openweathermap.org/data/2.5/weather?appid=${apiKey}&units=metric&lat=${latitude}&lon=${longitude}`
         );
         setweatherdata(response2.data);
 
-        // console.log(response.data);
       } catch (error) {
         console.error("Error:", error);
-        // Fallback to default coordinates if geolocation fails
-
-        // console.log(weatherdata.weather.main);
+       
       }
     };
 
@@ -80,10 +74,10 @@ const Weather = () => {
     } else {
       fetchweatherByLocation(location);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   updateBackground();
-  console.log(weatherdata);
   return (
     <div>
       {weatherdata && (
