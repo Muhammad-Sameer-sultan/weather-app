@@ -89,12 +89,11 @@ const Weather = () => {
             top: "0",
             paddingTop: "2.8rem",
             zIndex: "-1",
-            // background: `url(${thunder}) center/cover no-repeat fixed`,
           }}
         >
           <Container>
             <div className="mian row justify-content-center align-items-center ">
-              <div className="current d-flex flex-wrap justify-content-center align-items-center gap-2 mt-3">
+              <div className="current d-flex flex-wrap justify-content-center align-items-center gap-2 mt-5">
                 <div style={{ width: "100px", position: "relative" }}>
                   <div
                     className=""
@@ -116,9 +115,9 @@ const Weather = () => {
                   />
                 </div>
 
-                <div className="text-center mt-3 text-light d-flex flex-wrap align-items-center justify-content-center gap-5">
+                <div className="text-center mt-3  mt-md-0 text-light d-flex flex-wrap align-items-center justify-content-center gap-2 gap-lg-5">
                   <div className="">
-                    <div className="ms-3 d-sm-flex text-start  align-items-center  justify-content-center ">
+                    <div className="ms-lg-3 d-sm-flex text-start  align-items-center  justify-content-center ">
                       <div className="text-start">
                         <h3>{weatherdata.weather[0].main}</h3>
                         <h1 className="">
@@ -168,7 +167,7 @@ const Weather = () => {
 <div className="col-sm-8 px-5 p-sm-0">
 <div className="list-group  p-sm-2">
                 <div className="row bg-light p-sm-3 rounded-2 mt-3">
-                  <ul className="list-group  col-sm-6">
+                  <ul className="list-group  col-md-6">
                     <li className="list-group-item d-flex justify-content-between align-items-center">
                       <span>
                         <WiHumidity className="fs-2 me-1" /> Humidity
@@ -208,7 +207,7 @@ const Weather = () => {
                       </span>
                     </li>
                   </ul>
-                  <ul className="list-group  col-sm-6">
+                  <ul className="list-group  col-md-6">
                     <li className="list-group-item d-flex justify-content-between align-items-center">
                       <span>
                         <WiStrongWind className="fs-2 me-1" /> Pressure
@@ -230,15 +229,14 @@ const Weather = () => {
                       </span>
                       <span className="">{weatherdata.main.feels_like}</span>
                     </li>
-                    <li className="list-group-item d-flex justify-content-between align-items-center">
-                      <span>
+                    <li className="list-group-item d-flex flex-wrap justify-content-between align-items-center">
+                      <div>
                         <MdOutlineMyLocation className="fs-2 me-2" />
                         Coordinates
-                      </span>
-                      <span className="">
-                        Longitude: {weatherdata.coord.lon} , Latitude:{" "}
-                        {weatherdata.coord.lat}
-                      </span>
+                      </div>
+                      <div className="">
+                        Longitude: {weatherdata.coord.lon} <br/>Latitude: {weatherdata.coord.lat}
+                      </div>
                     </li>
                   </ul>
                 </div>

@@ -26,13 +26,17 @@ function Navbars() {
 
   return (
     <>
-      <Navbar expand="lg" className="bg-nav fs-5 bg-blur" data-bs-theme="dark" style={{ background: 'url(blurred-background-image.jpg) fixed', backgroundSize: 'cover', backdropFilter: 'blur(5px)' }}>
+      <Navbar expand="lg" className="position-fixed top-0 container-fluid" data-bs-theme="dark"  style={{
+    background: 'rgba(209, 209, 209, 0.2) url(blurred-background-image.jpg) fixed',
+    backgroundSize: 'cover',
+    backdropFilter: 'blur(5px)',
+  }}>
       <Container>
-      <img width={"35px"} src={favicon} alt="" />
-          <Navbar.Brand to="/" className="fs-5">Weather App</Navbar.Brand>
+      <img width={"50px"} src={favicon} alt="" />
+          <Navbar.Brand to="/" className="fs-4">Weather App</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" ref={toggleGo} />
         <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="me-auto ms-5">
+        <Nav className="me-auto ms-5 fs-5">
           <Nav.Link as={Link} to="/">Today</Nav.Link>
             <Nav.Link as={Link} to={"hourly"}>Hourley</Nav.Link>
             
@@ -46,7 +50,7 @@ function Navbars() {
                 type="search"
                 name="location"
                 placeholder="Search for your location"
-                className="me-2"
+                className="me-2 "
                 aria-label="Search"
               />
               <Button type="submit" variant="outline-warning" >
@@ -55,34 +59,7 @@ function Navbars() {
             </Form>
         </Navbar.Collapse></Container>
     </Navbar>
-      {/* <Navbar className="bg-nav fs-5" data-bs-theme="dark">
-        <Container>
-          <img width={"35px"} src={favicon} alt="" />
-          <Navbar.Brand to="/" className="fs-5">Weather App</Navbar.Brand>
-          
-          <Nav className="me-auto ms-5">
-          <Nav.Link as={Link} to="/">Today</Nav.Link>
-            <Nav.Link as={Link} to={"hourly"}>Hourley</Nav.Link>
-            
-          </Nav>
-          <Form
-              className="d-flex "
-              data-bs-theme="light"
-              onSubmit={searchLocation}
-            >
-              <Form.Control
-                type="search"
-                name="location"
-                placeholder="Search for your location"
-                className="me-2"
-                aria-label="Search"
-              />
-              <Button type="submit" variant="outline-warning">
-                Go
-              </Button>
-            </Form>
-        </Container>
-      </Navbar> */}
+     
     </>
   );
 }
