@@ -13,6 +13,7 @@ import { useContext, useEffect} from "react";
 import weatherContext from "../context/context";
 import axios from 'axios'
 
+
 function AccordMain() {
   const { location,updateBackground,fetchweatherByLocation,hourlyweather,iconUrl, timestampToTime,apiKey ,setweatherdata,sethourlyweather} =
     useContext(weatherContext);
@@ -96,7 +97,8 @@ function AccordMain() {
   updateBackground();
 
   return (
-    <Accordion className="col-lg-8 bg-light p-4 rounded-2" defaultActiveKey="0">
+    
+    <Accordion className="col-lg-8 z-1 bg-light p-4 rounded-2" defaultActiveKey="0">
       {hourlyweather && <h3>{hourlyweather.city.name}  <img
                       src={`https://flagcdn.com/40x30/${hourlyweather.city.country.toLowerCase()}.png`}
                       alt={""}
@@ -107,41 +109,42 @@ function AccordMain() {
           <div key={data.dt}>
             {timestampToDateTime(lastDate) !== timestampToDateTime(data.dt) && (
               <>
-                <h4>{timestampToDateTime(data.dt)}</h4>
+                <h4 className="mt-4">{timestampToDateTime(data.dt)}</h4>
                 {setLastDate(data.dt)}
                 
               </>
             )}
             <Accordion.Item eventKey={data.dt}>
               <Accordion.Header>
-                <div className="row w-100 d-flex justify-content-between align-items-center">
-                  <div className="col-2 col-sm-1 fs-5">
+                <div className="row w-100  d-flex justify-content-between align-items-center">
+                  <div className="col-5   col-sm-2 col-md-2 fs-5">
                     <span>{data.dt_txt.slice(10, 16)}</span>
                   </div>
-                  <div className="col-2">
-                    <h4 className="m-0 p-0 ">
-                      {data.main.temp} <sup>o</sup>C
-                    </h4>
-                  </div>
-                  <div className="col-3 p-0 justify-content-between align-items-center">
+                  <div className="col-7  col-sm-4 col-md-3 p-0 d-flex justify-content-start align-items-center">
                     <img
                       width={"40px"}
                       src={iconUrl + data.weather[0].icon + ".png"}
                       alt="weather icon"
                     />{" "}
-                    <span className="fw-bold ms-2">
+                    <div className="fw-bold fs-6 ms-2 ">
                       {data.weather[0].description.toUpperCase()}
+                    </div>
+                  </div>
+                  <div className="col-5 col-sm-2 col-md-2">
+                    <span className=" fs-5  ">
+                      {data.main.temp} <sup>o</sup>C
                     </span>
                   </div>
-                  <div className="d-none d-sm-block col-sm-1 fs-4">
+                  
+                  <div className="col-1 d-none d-md-inline-block   fs-6 ">
                     <WiHumidity />
                     {data.main.humidity}
                   </div>
-                  <div className="col-4 fs-4">
+                  <div className="col-7 col-sm-4 col-md-4 text-start fs-6  fs-sm-5">
                     <WiWindy className="fs-2" />{" "}
                     <span className="ms-1 me-2">{data.wind.speed} Km/hr</span>{" "}
                     <WiWindDeg
-                      className="fs-2"
+                      className="fs-2 d-none d-md-inline-block"
                       style={{ transform: `rotate(${data.wind.deg}deg)` }}
                     />
                   </div>
@@ -150,13 +153,13 @@ function AccordMain() {
               <Accordion.Body>
                 <div className="container">
                   <div className="card p-3">
-                    <div className="row">
-                      <div className="col-4">
-                        <div className="d-flex justify-content-center align-items-center">
-                          <div className="d-flex justify-content-between align-items-center">
+                    <div className="row justify-content-center align-items-center">
+                      <div className="col-12 col-sm-4">
+                        <div className="">
+                          <div className="d-flex justify-content-center align-items-center">
                             <FaTemperatureHigh className="fs-3 me-2" />
                             <div className="">
-                              <span>Maximum Temperature</span>
+                              <span>Max Temperature</span>
                               <h5 className="fw-bolder">
                                 {data.main.temp_max} <sup>o</sup>C
                               </h5>
@@ -164,7 +167,7 @@ function AccordMain() {
                           </div>
                         </div>
                       </div>
-                      <div className="col-4">
+                      <div className="col-12 col-sm-4">
                         <div className="d-flex justify-content-center align-items-center">
                           <div className="d-flex justify-content-between align-items-center">
                             <MdOutlineCompress className="fs-3 me-2" />
@@ -177,7 +180,7 @@ function AccordMain() {
                           </div>
                         </div>
                       </div>
-                      <div className="col-4">
+                      <div className="col-12 col-sm-4">
                         <div className="d-flex justify-content-center align-items-center">
                           <div className="d-flex justify-content-between align-items-center">
                             <WiSunrise className="fs-3 me-2" />
@@ -192,13 +195,13 @@ function AccordMain() {
                       </div>
                     </div>
                     <hr />
-                    <div className="row">
-                      <div className="col-4">
-                        <div className="d-flex justify-content-center align-items-center">
-                          <div className="d-flex justify-content-between align-items-center">
+                    <div className="row d-flex justify-content-center align-items-center">
+                      <div className="col-12 col-sm-4">
+                        <div className="">
+                          <div className="d-flex justify-content-center align-items-center">
                             <FaTemperatureEmpty className="fs-3 me-2" />
                             <div className="">
-                              <span>Minimun Temperature</span>
+                              <span>Min Temperature</span>
                               <h5 className="fw-bolder">
                                 {data.main.temp_min} <sup>o</sup>C
                               </h5>
@@ -206,7 +209,7 @@ function AccordMain() {
                           </div>
                         </div>
                       </div>
-                      <div className="col-4">
+                      <div className="col-12 col-sm-4">
                         <div className="d-flex justify-content-center align-items-center">
                           <div className="d-flex justify-content-between align-items-center">
                             <AiFillEyeInvisible className="fs-3 me-2" />
@@ -217,7 +220,7 @@ function AccordMain() {
                           </div>
                         </div>
                       </div>
-                      <div className="col-4">
+                      <div className="col-12 col-sm-4">
                         <div className="d-flex justify-content-center align-items-center">
                           <div className="d-flex justify-content-between align-items-center">
                             <WiSunset className="fs-3 me-2" />
@@ -237,6 +240,7 @@ function AccordMain() {
             </Accordion.Item>
           </div>
         ))}
+        
     </Accordion>
   );
 }

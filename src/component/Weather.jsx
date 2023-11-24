@@ -245,8 +245,7 @@ const Weather = () => {
              
             </div>
             <div className="row ">
-              {/* <HourlyCard key={hourlyweather.dt} hourlyweather={hourlyweather.list}/> */}
-              {/* {console.log(hourlyweather.list[0])} */}
+              
               {hourlyweather &&
                 hourlyweather.list
                   .slice(0, 4)
